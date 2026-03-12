@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ item }} — Chart View</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6D4C41;
+            --secondary: #D4A017;
+            --accent: #689F38;
+            --bg: #FFF8E1;
+            --card: rgba(255, 255, 255, 0.97);
+            --border: rgba(0, 0, 0, 0.09);
+            --text: #4E342E;
+            --muted: #8D6E63;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            background-image:
+                linear-gradient(rgba(255, 248, 225, 0.88), rgba(255, 248, 225, 0.88)),
+                url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2.5rem 1.5rem;
+        }
+
+        /* ── Header ── */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .header-icon {
+            font-size: 2.8rem;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .city-badge {
+            display: inline-block;
+            background: rgba(104, 159, 56, 0.12);
+            border: 1.5px solid rgba(104, 159, 56, 0.35);
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 0.78rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 4px 14px;
+            border-radius: 50px;
+            margin-bottom: 0.5rem;
+        }
+
+        .date-range {
+            font-size: 0.95rem;
+            color: var(--muted);
+            font-weight: 400;
+            margin-top: 0.25rem;
+        }
+
+        /* ── Card wrapper ── */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2rem 2.5rem;
+            max-width: 1100px;
+            width: 100%;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.08);
+            animation: fadeIn 0.55s ease-out;
+            margin-bottom: 1.5rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Selector row ── */
+        .selector-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .selector-row label {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        .selector-row select {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.65rem 1rem;
+            border-radius: 10px;
+            border: 1.5px solid var(--border);
+            background: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.97rem;
+            color: var(--text);
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .selector-row select:focus {
+            border-color: var(--accent);
+        }
+
+        .show-btn {
+            padding: 0.65rem 1.5rem;
+            border-radius: 10px;
+            border: 1.5px solid var(--primary);
+            background: rgba(109, 76, 65, 0.06);
+            color: var(--primary);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.97rem;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s, color 0.2s, transform 0.15s;
+        }
+
+        .show-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* ── Year navigation ── */
+        .year-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        .year-nav .year-label {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .year-nav-btn {
+            padding: 6px 18px;
+            border-radius: 50px;
+            border: 1.5px solid var(--border);
+            background: rgba(0, 0, 0, 0.04);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.92rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .year-nav-btn:hover {
+            background: rgba(104, 159, 56, 0.12);
+            color: var(--accent);
+            border-color: rgba(104, 159, 56, 0.4);
+        }
+
+        .year-nav-btn.disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* ── Chart section ── */
+        .chart-section {
+            margin-top: 1.5rem;
+        }
+
+        .chart-section-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .chart-image-wrap {
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+            background: #FAFAFA;
+        }
+
+        .chart-image-wrap img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .no-chart {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--muted);
+            font-size: 1rem;
+        }
+
+        /* ── Bottom navigation buttons ── */
+        .btn-group {
+            max-width: 1100px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        .nav-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            border-radius: 50px;
+            border: none;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+        }
+
+        .btn-season {
+            background: linear-gradient(135deg, #c8b400, #689F38);
+            box-shadow: 0 4px 16px rgba(104, 159, 56, 0.3);
+        }
+
+        .btn-back {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            box-shadow: 0 4px 16px rgba(109, 76, 65, 0.25);
+        }
+
+        /* ── Dark Mode ── */
+        body.dark-mode {
+            --bg: #14161a; --card: rgba(30,33,42,0.98); --border: rgba(255,255,255,0.08);
+            --text: #e8e0d4; --muted: #a89080;
+            background-color: #14161a;
+            background-image: linear-gradient(rgba(20,22,26,0.92),rgba(20,22,26,0.92)),url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1920&q=80');
+        }
+        body.dark-mode select {
+            background: rgba(255,255,255,0.06) !important;
+            color: var(--text) !important;
+            border-color: rgba(255,255,255,0.12) !important;
+        }
+        body.dark-mode .stat-box { background: rgba(255,255,255,0.04); }
+        body.dark-mode th { background: #1e2130 !important; color: var(--muted) !important; }
+        .dark-toggle {
+            position: fixed; top: 1.2rem; right: 1.2rem; z-index: 9999;
+            width: 48px; height: 48px; border-radius: 50%; border: none;
+            background: linear-gradient(135deg, #D4A017, #6D4C41); color: white;
+            font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            transition: transform 0.2s; display: flex; align-items: center; justify-content: center;
+        }
+        .dark-toggle:hover { transform: scale(1.12); }
+    </style>
+</head>
+
+<body>
+    <!-- ── Page Header ── -->
+    <div class="header">
+        <span class="header-icon">📊</span>
+        <h1>{{ item }}</h1>
+        <div class="city-badge">{{ city }}</div>
+        <div class="date-range">{{ from_date }} → {{ to_date }}</div>
+    </div>
+
+    <!-- ── Chart Selector Card ── -->
+    <div class="card">
+        <form method="POST" action="/chart">
+            <!-- Pass hidden fields so the route rebuilds the query -->
+            <input type="hidden" name="city" value="{{ city }}" />
+            <input type="hidden" name="item" value="{{ item }}" />
+            <input type="hidden" name="from_date" value="{{ from_date }}" />
+            <input type="hidden" name="to_date" value="{{ to_date }}" />
+            <input type="hidden" name="chart_year" value="{{ current_year or '' }}" />
+
+            <div class="selector-row">
+                <label for="chart_month">Select Chart View:</label>
+                <select name="chart_month" id="chart_month">
+                    <option value="all" {% if selected_chart_month=='all' %}selected{% endif %}>
+                        All Months (Month-by-Month Bar Chart)
+                    </option>
+                    <option value="intersect" {% if selected_chart_month=='intersect' %}selected{% endif %}>
+                        Year-over-Year Intersection
+                    </option>
+                    {% for key, label in available_months %}
+                    <option value="{{ key }}" {% if selected_chart_month==key %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="show-btn">Show Chart</button>
+            </div>
+        </form>
+
+        <!-- ── Chart Display ── -->
+        {% if graph_url %}
+        <div class="chart-section">
+
+            <!-- Year navigation arrows (shown for 'all' and 'intersect') -->
+            {% if selected_chart_month in ['all', 'intersect'] and current_year %}
+            <div class="year-nav">
+                {% if prev_year %}
+                <form method="POST" action="/chart" style="display:inline;">
+                    <input type="hidden" name="city" value="{{ city }}" />
+                    <input type="hidden" name="item" value="{{ item }}" />
+                    <input type="hidden" name="from_date" value="{{ from_date }}" />
+                    <input type="hidden" name="to_date" value="{{ to_date }}" />
+                    <input type="hidden" name="chart_month" value="{{ selected_chart_month }}" />
+                    <input type="hidden" name="chart_year" value="{{ prev_year }}" />
+                    <button type="submit" class="year-nav-btn">← {{ prev_year }}</button>
+                </form>
+                {% else %}
+                <span class="year-nav-btn disabled">← Prev</span>
+                {% endif %}
+
+                <span class="year-label">📅 {{ current_year }}</span>
+
+                {% if next_year %}
+                <form method="POST" action="/chart" style="display:inline;">
+                    <input type="hidden" name="city" value="{{ city }}" />
+                    <input type="hidden" name="item" value="{{ item }}" />
+                    <input type="hidden" name="from_date" value="{{ from_date }}" />
+                    <input type="hidden" name="to_date" value="{{ to_date }}" />
+                    <input type="hidden" name="chart_month" value="{{ selected_chart_month }}" />
+                    <input type="hidden" name="chart_year" value="{{ next_year }}" />
+                    <button type="submit" class="year-nav-btn">{{ next_year }} →</button>
+                </form>
+                {% else %}
+                <span class="year-nav-btn disabled">Next →</span>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <!-- Title above chart image -->
+            {% if selected_chart_month == 'all' %}
+            <div class="chart-section-title">
+                📈 MONTH-BY-MONTH MIN / MAX PRICE CHART (PYTHON/MATPLOTLIB)
+            </div>
+            {% elif selected_chart_month == 'intersect' %}
+            <div class="chart-section-title">
+                🔀 YEAR-OVER-YEAR INTERSECTION CHART (PYTHON/MATPLOTLIB)
+            </div>
+            {% else %}
+            <div class="chart-section-title">
+                📆 DAILY PRICE TREND — {{ selected_chart_month }} (PYTHON/MATPLOTLIB)
+            </div>
+            {% endif %}
+
+            <div class="chart-image-wrap">
+                <img src="data:image/png;base64,{{ graph_url }}" alt="Price Chart for {{ item }}" />
+            </div>
+        </div>
+        {% else %}
+        <div class="chart-section">
+            <div class="no-chart">
+                🔍 Select a chart view above and click <strong>Show Chart</strong> to generate the graph.
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- ── Bottom Navigation ── -->
+    <div class="btn-group">
+        <form method="POST" action="/search" style="margin: 0; width: 100%;">
+            <input type="hidden" name="city" value="{{ city }}" />
+            <input type="hidden" name="item" value="{{ item }}" />
+            <input type="hidden" name="from_date" value="{{ from_date }}" />
+            <input type="hidden" name="to_date" value="{{ to_date }}" />
+            <button type="submit" class="nav-btn btn-back" style="width: 100%;">← Back to Result Page</button>
+        </form>
+    </div>
+    <button class="dark-toggle" id="darkToggle" onclick="toggleDark()">🌙</button>
+    <script>
+        function toggleDark() {
+            const isDark = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('apmc_dark', isDark ? '1' : '0');
+            document.getElementById('darkToggle').textContent = isDark ? '☀️' : '🌙';
+        }
+        (function() {
+            if (localStorage.getItem('apmc_dark') === '1') {
+                document.body.classList.add('dark-mode');
+                document.addEventListener('DOMContentLoaded', function() {
+                    var b = document.getElementById('darkToggle'); if(b) b.textContent='☀️';
+                });
+            }
+        })();
+    </script>
+</body>
+
+</html>

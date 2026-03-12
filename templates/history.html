@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search History — APMC Gujarat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6D4C41;
+            --secondary: #D4A017;
+            --accent: #689F38;
+            --purple: #7E57C2;
+            --purple-dark: #4527A0;
+            --bg: #FFF8E1;
+            --card: rgba(255, 255, 255, 0.95);
+            --border: rgba(0, 0, 0, 0.1);
+            --text: #4E342E;
+            --muted: #8D6E63;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            background-image:
+                linear-gradient(rgba(255, 248, 225, 0.85), rgba(255, 248, 225, 0.85)),
+                url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        /* Header */
+        .header-card {
+            background: var(--card);
+            border-radius: 24px;
+            padding: 2rem 2.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            animation: fadeIn 0.5s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-left h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-left p {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.65rem 1.3rem;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-back {
+            background: rgba(0, 0, 0, 0.06);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-clear {
+            background: linear-gradient(135deg, #ef5350, #b71c1c);
+            color: white;
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.25);
+        }
+
+        /* Stats bar */
+        .stats-bar {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-val {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--purple);
+        }
+
+        .stat-lbl {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--muted);
+            letter-spacing: 0.5px;
+        }
+
+        /* History cards */
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .history-card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--purple);
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .history-card:first-child {
+            border-left-color: var(--secondary);
+            background: linear-gradient(135deg, rgba(212,160,23,0.04), rgba(255,255,255,0.95));
+        }
+
+        .history-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.10);
+        }
+
+        .card-index {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--muted);
+            min-width: 32px;
+            text-align: center;
+        }
+
+        .history-card:first-child .card-index {
+            color: var(--secondary);
+        }
+
+        .card-body {
+            flex: 1;
+        }
+
+        .card-commodity {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badge-city {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 50px;
+            background: rgba(126, 87, 194, 0.12);
+            color: var(--purple);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-latest {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 50px;
+            background: rgba(212, 160, 23, 0.15);
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-dates {
+            font-size: 0.88rem;
+            color: var(--muted);
+            margin-top: 0.3rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .card-dates span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .card-time {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-top: 0.2rem;
+        }
+
+        .card-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: flex-end;
+        }
+
+        .btn-search-again {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            white-space: nowrap;
+            transition: transform 0.2s;
+        }
+
+        .btn-search-again:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Empty state */
+        .empty-state {
+            background: var(--card);
+            border-radius: 24px;
+            padding: 4rem 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h2 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 550px) {
+            .history-card { flex-wrap: wrap; }
+            .card-actions { flex-direction: row; width: 100%; }
+            .header-card { flex-direction: column; align-items: flex-start; }
+        }
+
+        /* ── Dark Mode ── */
+        body.dark-mode {
+            --bg: #14161a; --card: rgba(30,33,42,0.98); --border: rgba(255,255,255,0.08);
+            --text: #e8e0d4; --muted: #a89080; --purple: #b39ddb; --purple-dark: #9575cd;
+            background-color: #14161a;
+            background-image: linear-gradient(rgba(20,22,26,0.92),rgba(20,22,26,0.92)),url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1920&q=80');
+        }
+        body.dark-mode .header-card,
+        body.dark-mode .stats-bar,
+        body.dark-mode .history-card,
+        body.dark-mode .empty-state { background: rgba(30,33,42,0.98); box-shadow: 0 6px 24px rgba(0,0,0,0.3); }
+        body.dark-mode .btn-back { background: rgba(255,255,255,0.06); color: var(--text); }
+        .dark-toggle {
+            position: fixed; top: 1.2rem; right: 1.2rem; z-index: 9999;
+            width: 48px; height: 48px; border-radius: 50%; border: none;
+            background: linear-gradient(135deg, #D4A017, #6D4C41); color: white;
+            font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            transition: transform 0.2s; display: flex; align-items: center; justify-content: center;
+        }
+        .dark-toggle:hover { transform: scale(1.12); }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Header -->
+        <div class="header-card">
+            <div class="header-left">
+                <h1>⏳ Search History</h1>
+                <p>Your recent APMC commodity searches</p>
+            </div>
+            <div class="header-actions">
+                <a href="/city" class="btn btn-back">← Home</a>
+                <button class="btn btn-clear" onclick="clearHistory()">🗑️ Clear All</button>
+            </div>
+        </div>
+
+        <!-- Stats bar -->
+        <div class="stats-bar" id="statsBar" style="display:none;">
+            <div class="stat-item">
+                <span class="stat-val" id="totalSearches">0</span>
+                <span class="stat-lbl">Total Searches</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-val" id="uniqueCommodities">0</span>
+                <span class="stat-lbl">Unique Commodities</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-val" id="latestCity">—</span>
+                <span class="stat-lbl">Last City</span>
+            </div>
+        </div>
+
+        <!-- History list -->
+        <div class="history-list" id="historyList"></div>
+
+        <!-- Empty state (hidden by default, shown via JS) -->
+        <div class="empty-state" id="emptyState" style="display:none;">
+            <div class="empty-icon">📭</div>
+            <h2>No Search History Yet</h2>
+            <p>Search for a commodity on the home page and it will appear here!</p>
+        </div>
+    </div>
+
+    <script>
+        function getHistory() {
+            return JSON.parse(localStorage.getItem("apmc_search_history") || "[]");
+        }
+
+        function clearHistory() {
+            if (confirm("Clear all search history?")) {
+                localStorage.removeItem("apmc_search_history");
+                renderHistory();
+            }
+        }
+
+        function searchAgain(city, item, fromDate, toDate) {
+            // Build a form and submit to /search
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.action = "/search";
+
+            const fields = { city, item, from_date: fromDate, to_date: toDate, view_type: "table" };
+            Object.entries(fields).forEach(([name, value]) => {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = name;
+                input.value = value;
+                form.appendChild(input);
+            });
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        function renderHistory() {
+            const history = getHistory();
+            const list    = document.getElementById("historyList");
+            const empty   = document.getElementById("emptyState");
+            const stats   = document.getElementById("statsBar");
+
+            list.innerHTML = "";
+
+            if (history.length === 0) {
+                empty.style.display = "block";
+                stats.style.display = "none";
+                return;
+            }
+
+            empty.style.display = "none";
+            stats.style.display = "flex";
+
+            // Stats
+            document.getElementById("totalSearches").textContent   = history.length;
+            document.getElementById("uniqueCommodities").textContent = new Set(history.map(h => h.item)).size;
+            document.getElementById("latestCity").textContent       = history[0].city;
+
+            history.forEach((entry, idx) => {
+                const card = document.createElement("div");
+                card.className = "history-card";
+
+                const isLatest = idx === 0;
+
+                card.innerHTML = `
+                    <div class="card-index">${idx + 1}</div>
+                    <div class="card-body">
+                        <div class="card-commodity">
+                            🌾 ${entry.item}
+                            <span class="badge-city">${entry.city}</span>
+                            ${isLatest ? '<span class="badge-latest">✨ Latest</span>' : ''}
+                        </div>
+                        <div class="card-dates">
+                            <span>📅 From: <strong>${entry.from_date || '—'}</strong></span>
+                            <span>📅 To: <strong>${entry.to_date || '—'}</strong></span>
+                        </div>
+                        <div class="card-time">🕐 Searched at: ${entry.searched_at}</div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-search-again"
+                            onclick="searchAgain('${entry.city}','${entry.item}','${entry.from_date}','${entry.to_date}')">
+                            🔍 Search Again
+                        </button>
+                    </div>
+                `;
+
+                list.appendChild(card);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", renderHistory);
+    </script>
+    <button class="dark-toggle" id="darkToggle" onclick="toggleDark()">🌙</button>
+    <script>
+        function toggleDark() {
+            const isDark = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('apmc_dark', isDark ? '1' : '0');
+            document.getElementById('darkToggle').textContent = isDark ? '☀️' : '🌙';
+        }
+        (function() {
+            if (localStorage.getItem('apmc_dark') === '1') {
+                document.body.classList.add('dark-mode');
+                document.addEventListener('DOMContentLoaded', function() {
+                    var b = document.getElementById('darkToggle'); if(b) b.textContent='☀️';
+                });
+            }
+        })();
+    </script>
+</body>
+
+</html>

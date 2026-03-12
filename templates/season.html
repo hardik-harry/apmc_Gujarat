@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ item }} — Seasonal Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6D4C41;
+            --secondary: #D4A017;
+            --accent: #689F38;
+            --bg: #FFF8E1;
+            --card: rgba(255, 255, 255, 0.95);
+            --border: rgba(0, 0, 0, 0.1);
+            --text: #4E342E;
+            --muted: #8D6E63;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            background-image:
+                linear-gradient(rgba(255, 248, 225, 0.85), rgba(255, 248, 225, 0.85)),
+                url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 1100px;
+            width: 100%;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-out;
+            margin-bottom: 2rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.7rem;
+            font-weight: 800;
+            margin-bottom: 1.8rem;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        /* Season Grid */
+        .season-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .season-box {
+            padding: 1.2rem 2rem;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--border);
+            text-align: left;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+        }
+
+        .season-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(109, 76, 65, 0.15);
+        }
+
+        .season-name {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 120px;
+        }
+
+        .season-val-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-left: auto;
+        }
+
+        .season-val {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .season-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.3rem;
+        }
+
+        .season-arrival {
+            font-size: 0.95rem;
+            color: var(--text);
+            font-weight: 600;
+            min-width: 140px;
+            text-align: right;
+        }
+
+        .highest-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #D32F2F;
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(211, 47, 47, 0.3);
+            white-space: nowrap;
+        }
+
+        /* Table */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.02);
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th,
+        td {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.04);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Navigation */
+        .nav-links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 1rem;
+            border-radius: 50px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .btn-back {
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-back:hover {
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(109, 76, 65, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(109, 76, 65, 0.3);
+        }
+
+        /* Decor */
+        .winter { border-top: 5px solid #2196F3; }
+        .summer { border-top: 5px solid #FF9800; }
+        .monsoon { border-top: 5px solid #4CAF50; }
+
+        @media (max-width: 650px) {
+            .season-box {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+            }
+            .season-val-container {
+                align-items: flex-start;
+                margin-left: 0;
+                margin-top: 1rem;
+            }
+            .season-arrival {
+                text-align: left;
+                margin-top: 0.5rem;
+            }
+            .highest-badge {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+            }
+            .nav-links { grid-template-columns: 1fr; }
+            .card { padding: 1.5rem; }
+        }
+
+
+        /* ── Dark Mode ── */
+        body.dark-mode {
+            --bg: #14161a; --card: rgba(30,33,42,0.98); --border: rgba(255,255,255,0.08);
+            --text: #e8e0d4; --muted: #a89080;
+            background-color: #14161a;
+            background-image: linear-gradient(rgba(20,22,26,0.92),rgba(20,22,26,0.92)),url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1920&q=80');
+        }
+        body.dark-mode .season-box { background: rgba(255,255,255,0.04); }
+        body.dark-mode .season-val { color: #8bc34a; }
+        body.dark-mode th { background: #1e2130 !important; color: var(--muted) !important; }
+        body.dark-mode td { color: var(--text); }
+        body.dark-mode .btn-back { background: rgba(255,255,255,0.06); color: var(--text); }
+        .dark-toggle {
+            position: fixed; top: 1.2rem; right: 1.2rem; z-index: 9999;
+            width: 48px; height: 48px; border-radius: 50%; border: none;
+            background: linear-gradient(135deg, #D4A017, #6D4C41); color: white;
+            font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            transition: transform 0.2s; display: flex; align-items: center; justify-content: center;
+        }
+        .dark-toggle:hover { transform: scale(1.12); }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>📅 {{ item }} — Seasonal Analysis</h1>
+
+        <div class="section-title">✨ Seasonal Performance Summary</div>
+        <div class="season-grid">
+            {% set max_avg = 0 %}
+            {% for s in season_data %}
+                {% if s.avg_price > max_avg %}{% set max_avg = s.avg_price %}{% endif %}
+            {% endfor %}
+
+            {% for s in season_data %}
+            <div class="season-box {{ s.season.lower() }}">
+                <div class="season-name">
+                    {% if s.season == 'Winter' %}❄️{% elif s.season == 'Summer' %}☀️{% else %}🌧️{% endif %}
+                    {{ s.season }}
+                </div>
+                
+                <div class="season-arrival">📦 {{ s.arrival }} Qt Arrival</div>
+
+                <div class="season-val-container">
+                    <div class="season-val">₹{{ s.avg_price }}</div>
+                    <div class="season-label">Average Price</div>
+                </div>
+
+                {% if s.avg_price == max_avg and max_avg > 0 %}
+                    <div class="highest-badge">Highest Price</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="section-title">📊 Yearly Comparative Trends</div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Year</th>
+                        <th>Avg Price (₹)</th>
+                        <th>Total Arrival (Qt)</th>
+                        <th>Dominant Season (Vol)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for y in year_data %}
+                    <tr>
+                        <td style="font-weight: 800; color: var(--primary);">{{ y.year }}</td>
+                        <td style="color: var(--accent); font-weight: 700;">₹{{ y.avg_price }}</td>
+                        <td style="color: var(--secondary); font-weight: 600;">{{ y.arrival }}</td>
+                        <td>
+                            <span style="font-weight:600;">{{ y.best_season }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="nav-links">
+            <a href="javascript:history.back()" class="btn btn-back">← Back to Results</a>
+            <a href="/city" class="btn btn-primary">New Search</a>
+        </div>
+    </div>
+    <button class="dark-toggle" id="darkToggle" onclick="toggleDark()">🌙</button>
+    <script>
+        function toggleDark() {
+            const isDark = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('apmc_dark', isDark ? '1' : '0');
+            document.getElementById('darkToggle').textContent = isDark ? '☀️' : '🌙';
+        }
+        (function() {
+            if (localStorage.getItem('apmc_dark') === '1') {
+                document.body.classList.add('dark-mode');
+                document.addEventListener('DOMContentLoaded', function() {
+                    var b = document.getElementById('darkToggle'); if(b) b.textContent='☀️';
+                });
+            }
+        })();
+    </script>
+</body>
+
+</html>

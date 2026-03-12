@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APMC Market System - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap"
+        rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #FFF8E1;
+            background-image: linear-gradient(rgba(255, 248, 225, 0.85), rgba(255, 248, 225, 0.85)), url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem;
+            border-radius: 24px;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #D4A017, #6D4C41);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: #8D6E63;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            font-family: 'Outfit', sans-serif;
+            background: rgba(0, 0, 0, 0.03);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: rgba(164, 198, 57, 0.5);
+            box-shadow: 0 0 0 3px rgba(164, 198, 57, 0.15);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #D4A017, #6D4C41);
+            color: white;
+            border: none;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(109, 76, 65, 0.2);
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+        /* ── Dark Mode ── */
+        body.dark-mode {
+            background-color: #14161a;
+            background-image: linear-gradient(rgba(20, 22, 26, 0.92), rgba(20, 22, 26, 0.92)), url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1920&q=80');
+        }
+        body.dark-mode .card {
+            background: rgba(30, 33, 42, 0.98);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+        }
+        body.dark-mode h1 { -webkit-text-fill-color: transparent; }
+        body.dark-mode p { color: #a89080; }
+        body.dark-mode input {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.1);
+            color: #e8e0d4;
+        }
+        .dark-toggle {
+            position: fixed;
+            top: 1.2rem;
+            right: 1.2rem;
+            z-index: 9999;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #D4A017, #6D4C41);
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+        }
+        .dark-toggle:hover { transform: scale(1.12); }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div class="logo">🌾</div>
+        <h1>APMC Market Portal</h1>
+        <p>Login to your account to view dashboard</p>
+        {% if error %}
+        <p
+            style="color: #d32f2f; background-color: #ffebee; padding: 10px; border-radius: 8px; border: 1px solid #ef9a9a; font-weight: 600;">
+            {{ error }}</p>
+        {% endif %}
+        <form action="/login" method="POST">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Login to Dashboard ➔</button>
+        </form>
+    </div>
+</body>
+<button class="dark-toggle" id="darkToggle" onclick="toggleDark()" title="Toggle Dark Mode">🌙</button>
+<script>
+    function toggleDark() {
+        const isDark = document.body.classList.toggle('dark-mode');
+        localStorage.setItem('apmc_dark', isDark ? '1' : '0');
+        document.getElementById('darkToggle').textContent = isDark ? '☀️' : '🌙';
+    }
+    (function() {
+        if (localStorage.getItem('apmc_dark') === '1') {
+            document.body.classList.add('dark-mode');
+            document.addEventListener('DOMContentLoaded', function() {
+                var btn = document.getElementById('darkToggle');
+                if (btn) btn.textContent = '☀️';
+            });
+        }
+    })();
+</script>
+
+</html>

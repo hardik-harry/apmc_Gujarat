@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ item }} — Analysis Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6D4C41;
+            --secondary: #D4A017;
+            --accent: #689F38;
+            --bg: #FFF8E1;
+            --card: rgba(255, 255, 255, 0.95);
+            --border: rgba(0, 0, 0, 0.1);
+            --text: #4E342E;
+            --muted: #8D6E63;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            background-image:
+                linear-gradient(rgba(255, 248, 225, 0.85), rgba(255, 248, 225, 0.85)),
+                url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 1100px;
+            width: 100%;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-out;
+            margin-bottom: 2rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.7rem;
+            font-weight: 800;
+            margin-bottom: 0.8rem;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .selected-date-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            background: rgba(109, 76, 65, 0.05);
+            border: 1px solid rgba(109, 76, 65, 0.1);
+            color: var(--primary);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin: 0 auto 2rem auto;
+            width: fit-content;
+        }
+
+        /* Error box */
+        .error-box {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #c62828;
+        }
+
+        .error-box .error-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .error-box p {
+            font-size: 0.95rem;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-box {
+            padding: 1.2rem;
+            border-radius: 16px;
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(109, 76, 65, 0.12);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.78rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.3rem;
+        }
+
+        /* Section title */
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--primary);
+        }
+
+        /* Table */
+        .table-wrap {
+            overflow-y: auto;
+            max-height: 480px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.02);
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.04);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--muted);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: #fdfdfd;
+        }
+
+        /* Custom scrollbar for table */
+        .table-wrap::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .table-wrap::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 8px;
+        }
+
+        .table-wrap::-webkit-scrollbar-thumb {
+            background: rgba(109, 76, 65, 0.3);
+            border-radius: 8px;
+        }
+
+        .table-wrap::-webkit-scrollbar-thumb:hover {
+            background: rgba(109, 76, 65, 0.6);
+        }
+
+        tr:hover {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .td-date {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .td-min {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .td-max {
+            color: #c62828;
+            font-weight: 600;
+        }
+
+        .td-arr {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .page-btn {
+            background: rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background: rgba(104, 159, 56, 0.12);
+            color: var(--accent);
+            border-color: rgba(104, 159, 56, 0.4);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        #page-info {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+            min-width: 160px;
+            text-align: center;
+        }
+
+        /* Back button */
+        .back-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 0 20px rgba(109, 76, 65, 0.2);
+            transition: transform 0.2s;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Action nav buttons */
+        .action-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            border-radius: 50px;
+            border: none;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 0.85rem;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+        }
+
+        .btn-chart {
+            background: linear-gradient(135deg, #D4A017, #6D4C41);
+            box-shadow: 0 4px 16px rgba(212, 160, 23, 0.3);
+        }
+
+        .btn-season {
+            background: linear-gradient(135deg, #c8b400, #689F38);
+            box-shadow: 0 4px 16px rgba(104, 159, 56, 0.3);
+        }
+
+        .btn-group {
+            margin-bottom: 1rem;
+        }
+
+        /* ── Dark Mode ── */
+        body.dark-mode {
+            --bg: #14161a; --card: rgba(30,33,42,0.98); --border: rgba(255,255,255,0.08);
+            --text: #e8e0d4; --muted: #a89080;
+            background-color: #14161a;
+            background-image: linear-gradient(rgba(20,22,26,0.92),rgba(20,22,26,0.92)),url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1920&q=80');
+        }
+        body.dark-mode th { background: #1e2130 !important; color: var(--muted) !important; }
+        body.dark-mode td { color: var(--text); }
+        body.dark-mode .table-wrap { background: rgba(255,255,255,0.02); }
+        body.dark-mode .stat-box { background: rgba(255,255,255,0.04); }
+        body.dark-mode .error-box { background: rgba(239,68,68,0.08); }
+        .dark-toggle {
+            position: fixed; top: 1.2rem; right: 1.2rem; z-index: 9999;
+            width: 48px; height: 48px; border-radius: 50%; border: none;
+            background: linear-gradient(135deg, #D4A017, #6D4C41); color: white;
+            font-size: 1.3rem; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            transition: transform 0.2s; display: flex; align-items: center; justify-content: center;
+        }
+        .dark-toggle:hover { transform: scale(1.12); }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>🌾 {{ item }} Analysis</h1>
+        <div class="selected-date-badge">
+            📅 {{ from_date }} to {{ to_date }}
+        </div>
+
+        {% if error and not graph_url %}
+        <div class="error-box">
+            <div class="error-icon">❌</div>
+            <p>{{ error }}</p>
+        </div>
+        {% endif %}
+
+        {% if min_price > 0 or max_price > 0 or total_arrival > 0 or graph_url %}
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-value">₹{{ min_price }}</div>
+                <div class="stat-label">Min Price</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">₹{{ max_price }}</div>
+                <div class="stat-label">Max Price</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">₹{{ avg_price }}</div>
+                <div class="stat-label">Avg Price</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">{{ record_count }}</div>
+                <div class="stat-label">Total Records</div>
+            </div>
+        </div>
+
+        <!-- Day-by-Day Table -->
+        <div class="section-title">📋 Month-wise Prices</div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Min Price (₹)</th>
+                        <th>Max Price (₹)</th>
+                        <th>Arrival (Qt)</th>
+                    </tr>
+                </thead>
+                <tbody id="market-data">
+                    {% for row in daily_data %}
+                    {% if row.has_data %}
+                    <tr class="daily-row">
+                        <td class="td-date">{{ row.date }}</td>
+                        <td class="td-min">₹{{ row.min }}</td>
+                        <td class="td-max">₹{{ row.max }}</td>
+                        <td class="td-arr">{{ row.arrival }}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <button id="prevBtn" class="page-btn">← Previous Month</button>
+            <span id="page-info"></span>
+            <button id="nextBtn" class="page-btn">Next Month →</button>
+        </div>
+
+        {% endif %}
+
+        <div class="btn-group">
+            <a href="/chart?item={{ item }}&city={{ city }}&from_date={{ from_date }}&to_date={{ to_date }}"
+                class="action-btn btn-chart">📊 View Month-by-Month Chart</a>
+            <a href="/season?item={{ item }}&city={{ city }}" class="action-btn btn-season">📅 View Best Selling Season
+                (Annual)</a>
+        </div>
+        <a href="/city" class="back-btn">← Back to Search</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const rows = document.querySelectorAll('.daily-row');
+            if (rows.length === 0) return;
+
+            // Group rows strictly by their calendar month (YYYY-MM)
+            const months = [];
+            let currentMonth = null;
+
+            rows.forEach(row => {
+                const dateStr = row.querySelector('.td-date').innerText;
+                // Assumes format YYYY-MM-DD
+                const yyyy_mm = dateStr.substring(0, 7);
+
+                if (currentMonth !== yyyy_mm) {
+                    currentMonth = yyyy_mm;
+                    months.push({ label: currentMonth, rows: [] });
+                }
+                months[months.length - 1].rows.push(row);
+            });
+
+            if (months.length === 0) return;
+
+            let currentPageIndex = 0;
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const pageInfo = document.getElementById('page-info');
+
+            function showPage(index) {
+                // hide all
+                rows.forEach(r => r.style.display = 'none');
+
+                // show current
+                const group = months[index];
+                group.rows.forEach(r => r.style.display = 'table-row');
+
+                // Format month label 
+                const d = new Date(group.label + "-01");
+                const options = { month: 'long', year: 'numeric' };
+                pageInfo.innerText = d.toLocaleDateString(undefined, options);
+
+                // scroll table back to top when changing page
+                const tableWrap = document.querySelector('.table-wrap');
+                if (tableWrap) tableWrap.scrollTop = 0;
+
+                // Update buttons
+                if (prevBtn) prevBtn.disabled = index === 0;
+                if (nextBtn) nextBtn.disabled = index === months.length - 1;
+            }
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    if (currentPageIndex > 0) {
+                        currentPageIndex--;
+                        showPage(currentPageIndex);
+                    }
+                });
+            }
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    if (currentPageIndex < months.length - 1) {
+                        currentPageIndex++;
+                        showPage(currentPageIndex);
+                    }
+                });
+            }
+
+            showPage(0);
+        });
+    </script>
+    <button class="dark-toggle" id="darkToggle" onclick="toggleDark()">🌙</button>
+    <script>
+        function toggleDark() {
+            const isDark = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('apmc_dark', isDark ? '1' : '0');
+            document.getElementById('darkToggle').textContent = isDark ? '☀️' : '🌙';
+        }
+        (function() {
+            if (localStorage.getItem('apmc_dark') === '1') {
+                document.body.classList.add('dark-mode');
+                document.addEventListener('DOMContentLoaded', function() {
+                    var b = document.getElementById('darkToggle'); if(b) b.textContent='☀️';
+                });
+            }
+        })();
+    </script>
+</body>
+
+</html>
