@@ -1,203 +1,160 @@
-🌾 APMC Market Price & Farmer Information System
+# 🌾 APMC Market Price & Farmer Information System
 
-This project is a web-based platform that helps farmers and traders view APMC market prices, historical trends, seasonal insights, and agricultural news.
-The system is built using Flask, HTML templates, and SQL databases.
+A web-based platform that helps **farmers and traders analyze APMC market prices, historical trends, seasonal insights, and agricultural news**.
 
-The platform allows users to select a city and commodity to analyze price trends, helping them make better selling decisions.
+The system allows users to **select a city and commodity to view price trends**, helping farmers make **better selling decisions**.
 
-📂 Project Structure
-⚙️ Backend (Python Scripts)
-📌 app.py
+---
 
-This is the main application file and the core of the system.
-It runs a Flask web server that handles all website operations.
+🚀 Features
 
-Key responsibilities:
+- 📊 View **APMC commodity price data**
+- 📈 Analyze **historical price trends**
+- 🌱 View **seasonal analysis of crops**
+- 📰 Read **latest agricultural market news**
+- 🏙️ Select **different APMC cities**
+- 📉 Visualize data using **interactive charts**
 
-Manages URL routing between pages
+---
 
-Processes user input such as city, commodity, and date range
+🛠️ Technologies Used
 
-Connects to the market databases
+- Backend: Python with **Flask**
+- Frontend: HTML, CSS, JavaScript
+- Charts: **Chart.js**
+- Database: MySQL / SQL
+- Web Scraping: Python (Requests / BeautifulSoup)
 
-Fetches and processes price trend data
+---
 
-Sends processed data to the frontend templates for display
+---
 
-In simple terms, app.py controls how the entire website works.
+⚙️ Backend Files
+📌 `app.py`
+The **main application file** that runs the Flask web server.
 
-📌 scrape_farmer_news.py
+Functions:
+- Handles **page routing**
+- Processes **user inputs**
+- Connects to the **database**
+- Fetches and processes **market price data**
+- Sends data to the **HTML templates**
 
-This script collects latest agricultural news from farming and market-related websites.
+---
 
-Main functions:
+📌 `scrape_farmer_news.py`
+A **web scraping script** that collects agricultural news from farming websites.
 
-Scrapes headlines and article links
+Functions:
+- Scrapes **latest headlines**
+- Extracts **article links**
+- Provides **market updates for farmers**
 
-Extracts useful news for farmers
+---
 
-Stores or passes the news data to the website
+📌 `check_db.py`
+A **database debugging script** used to verify that the SQL database is working correctly.
 
-This helps farmers stay informed about:
+Functions:
+- Tests **database connection**
+- Runs **sample queries**
+- Helps debug **data loading issues**
 
-Crop price trends
+---
 
-Government policies
+📌 `.gitignore`
+This file tells Git which files should **not be uploaded** to the repository.
 
-Agricultural updates
+Ignored files include:
+- Cache files (`__pycache__`)
+- Temporary files
+- Environment variables
+- Secret configuration files
 
-📌 check_db.py
+---
 
-This is a database testing and debugging tool.
+🖥️ Frontend Templates
 
-Purpose:
+🏠 `home.html`
+The **main landing page** where users can:
+- Select **City**
+- Choose **Commodity**
+- Pick **date range**
 
-Checks whether the database connection is working
+---
+🔐 `login.html`
+Provides a **login interface** for authentication.
 
-Verifies that SQL queries return correct results
+---
 
-Helps developers debug issues with data loading
+📊 `result.html`
+Displays **market price results** including:
+- Commodity price tables
+- Date-wise price data
 
-It ensures that market price data is correctly stored and accessible.
+---
+📈 `chart.html`
+Displays **price trends using charts** created with **Chart.js**.
 
-📌 .gitignore
+---
+📰 `news.html`
+Shows **latest agricultural news** collected by the scraper.
 
-This file tells Git which files should not be uploaded to the repository.
+--
+🌱 `season.html`
+Displays **seasonal crop analysis**, including:
+- Best selling months
+- Year-over-year price comparisons
+- Seasonal demand trends
 
-Examples of ignored files:
+---
 
-Cache files (__pycache__)
+📜 `history.html`
+Shows **historical market data** for commodity prices.
 
-Temporary files
+---
 
-Environment files
+ 🗄️ Database Files
 
-Secret configuration keys
+📍 `apmc_ahmedabad.sql`
+Contains **APMC price data for Ahmedabad market**.
 
-This keeps the repository clean and secure.
+📍 `gondalmarket.sql`
+Contains **price data for Gondal market**.
 
-🖥️ Frontend (HTML Templates)
+ 📍 `market.sql`
+A **general database** containing combined market data.
 
-These templates create the user interface of the website.
+---
 
-🏠 home.html
+🎯 Project Objective
 
-The main landing page of the system.
+The main goal of this project is to:
 
-Users can:
+- Provide **transparent APMC market price information**
+- Help farmers **analyze trends before selling crops**
+- Offer **visual insights through charts**
+- Deliver **latest agricultural news updates**
 
-Select City
+This system improves **decision-making for farmers and traders** by making market data easy to access and understand.
 
-Choose Commodity
+---
 
-Define date range
+📌 Future Improvements
 
-This page acts as the starting point for market analysis.
+- Add **more APMC markets**
+- Implement **user accounts and dashboards**
+- Provide **price prediction using machine learning**
+- Add **mobile-friendly UI**
 
-🔐 login.html
+---
 
-Provides a login interface for users.
+👨‍💻 Author
 
-Purpose:
+**Hardik Dabhi**
 
-Authenticate users
+---
 
-Restrict access to system features if required.
+⭐ Support
 
-📊 result.html
-
-Displays the search results after a user selects city and commodity.
-
-Shows:
-
-Market price tables
-
-Date-wise price data
-
-Commodity statistics
-
-📈 chart.html
-
-A data visualization page that displays price trends in graph format.
-
-Likely uses Chart.js to generate:
-
-Price trend charts
-
-Market comparisons
-
-Visual analytics
-
-📰 news.html
-
-Displays agriculture and market news collected by the scraper.
-
-Helps farmers stay updated with:
-
-Market conditions
-
-Farming policies
-
-Agricultural developments
-
-🌱 season.html
-
-Provides seasonal market analysis.
-
-Shows:
-
-Best months to sell commodities
-
-Year-to-year price comparison
-
-Seasonal demand patterns
-
-This helps farmers plan crop selling strategies.
-
-📜 history.html
-
-Displays historical market price data.
-
-Users can review:
-
-Past commodity prices
-
-Long-term market trends
-
-Historical price comparisons
-
-🗄️ Database Files
-
-These SQL files contain market price data for different APMC markets.
-
-📍 apmc_ahmedabad.sql
-
-Contains commodity price records for Ahmedabad APMC market.
-
-📍 gondalmarket.sql
-
-Stores market data from Gondal APMC including historical price records.
-
-📍 market.sql
-
-Acts as a general or combined database that may include:
-
-Multiple city market data
-
-Shared commodity information
-
-Centralized market records
-
-🎯 Project Purpose
-
-The main objective of this system is to:
-
-Provide real-time and historical market price information
-
-Help farmers analyze trends before selling crops
-
-Offer data visualization and seasonal insights
-
-Keep farmers updated with agricultural news
-
-This platform improves decision-making and market transparency for farmers and traders.
+If you like this project, consider **starring the repository on GitHub**.
